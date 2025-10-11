@@ -30,6 +30,7 @@ struct ControlSurface: View {
                 Image(systemName: "slider.horizontal.3")
                     .font(.body.bold())
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(Rectangle())
                     .onTapGesture { isExpanded.toggle() }
                     .transition(.opacity)
                     .frame(width: 44, height: 44)
