@@ -10,13 +10,22 @@ import SwiftUI
 struct FramePickerControl: View {
     @Binding var frame: Int
 
+    #if os(macOS)
+        let selections: [Int] = [0, 15, 30, 60]
+    #else
+        let selections: [Int] = [0, 15, 30, 60, 120]
+    #endif
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Frame Limit")
-                .font(.body.bold())
+            HStack {
+                Text("Frame Limit")
+                    .font(.body.bold())
+                Spacer()
+            }
 
             Picker("", selection: $frame) {
-                ForEach([0, 15, 30, 60, 120], id: \.self) { option in
+                ForEach(selections, id: \.self) { option in
                     Text(option == 0 ? "MAX" : "\(option) FPS")
                         .font(.footnote)
                         .fontDesign(.monospaced)

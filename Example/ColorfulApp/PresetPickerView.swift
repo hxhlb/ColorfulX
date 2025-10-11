@@ -26,8 +26,11 @@ struct PresetPickerView: View {
                     Text(option.hint).tag(option)
                 }
             }
+            #if os(macOS)
+            .pickerStyle(.menu)
+            #else
             .pickerStyle(.wheel)
-            .frame(height: 120)
+            #endif
         }
     }
 }

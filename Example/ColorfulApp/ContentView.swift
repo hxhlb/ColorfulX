@@ -10,6 +10,10 @@ import SwiftUI
 
 private let defaultPreset: ColorfulPreset = .aurora
 
+extension Notification.Name {
+    static let closeControls = Notification.Name("toggleControls")
+}
+
 struct ContentView: View {
     @AppStorage("preset") private var preset: ColorfulPreset = defaultPreset
     @AppStorage("speed") private var speed: Double = 1.0
@@ -23,6 +27,12 @@ struct ContentView: View {
         ZStack {
             backgroundGrid
             animatedGradient
+            Rectangle()
+                .foregroundStyle(.clear)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    NotificationCenter.default.post(name: .closeControls, object: nil)
+                }
             overlayContent
         }
     }

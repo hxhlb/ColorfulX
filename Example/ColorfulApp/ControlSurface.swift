@@ -25,7 +25,6 @@ struct ControlSurface: View {
             if isExpanded {
                 controls
                     .transition(.opacity)
-                    .frame(width: 350)
             } else {
                 Image(systemName: "slider.horizontal.3")
                     .font(.body.bold())
@@ -36,12 +35,16 @@ struct ControlSurface: View {
             }
         }
         .contentShape(Rectangle())
+        .clipped()
         .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16))
         .animation(panelAnimation, value: isExpanded)
+        .onReceive(NotificationCenter.default.publisher(for: .closeControls)) { _ in
+            isExpanded = false
+        }
     }
 
     var controls: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 PresetPickerView(preset: $preset)
 
@@ -65,7 +68,9 @@ struct ControlSurface: View {
                 .buttonStyle(.plain)
             }
             .padding(16)
+            .frame(width: 350)
         }
         .frame(maxHeight: 320)
+        .frame(width: 350)
     }
 }
