@@ -47,9 +47,8 @@ Xcode users can also add the package through **File → Add Packages…** and pa
 
 ### Just One Line
 
-```swift
-ColorfulView(color: .aurora)
-```
+You do `import ColorfulX` and then `ColorfulView(color: .aurora)`. Done.
+
 
 ### Animated Gradient
 
