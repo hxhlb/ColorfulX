@@ -136,13 +136,9 @@ open class MulticolorGradientView: MetalView {
         commandEncoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupCount)
         commandEncoder.endEncoding()
 
-        let metalLayer = metalLink.metalLayer
-        let originalValue = metalLayer.presentsWithTransaction
-        metalLayer.presentsWithTransaction = true
         commandBuffer.commit()
         commandBuffer.waitUntilScheduled()
         drawable.present()
-        metalLayer.presentsWithTransaction = originalValue
 
         CATransaction.commit()
     }

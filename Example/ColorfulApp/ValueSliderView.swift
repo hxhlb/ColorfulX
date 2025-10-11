@@ -1,5 +1,5 @@
 //
-//  ValueSlider.swift
+//  ValueSliderView.swift
 //  ColorfulApp
 //
 //  Created by qaq on 11/10/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ValueSlider: View {
+struct ValueSliderView: View {
     let title: String
     @Binding var value: Double
     let range: ClosedRange<Double>
@@ -18,15 +18,16 @@ struct ValueSlider: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(title)
-                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .font(.body.bold())
                 Spacer()
                 Text(String(format: format, value))
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.body)
                     .monospacedDigit()
+                    .contentTransition(.numericText())
             }
+            .animation(.interactiveSpring, value: value)
 
             Slider(value: $value, in: range, step: step)
-                .tint(.primary)
         }
     }
 }

@@ -19,23 +19,12 @@ struct ContentView: View {
     @AppStorage("scale") private var scale: Double = 1
     @AppStorage("frame") private var frame: Int = 60
 
-    @State private var showSettings = false
-    @State private var prefersDarkExperience = false
-
     var body: some View {
         ZStack {
             backgroundGrid
             animatedGradient
-            Rectangle()
-                .foregroundStyle(.clear)
-                .contentShape(Rectangle())
-                .ignoresSafeArea()
-                .transition(.opacity)
-                .onTapGesture(perform: closeSettings)
             overlayContent
         }
-        .tint(.primary)
-        .preferredColorScheme(prefersDarkExperience ? .dark : .light)
     }
 
     private var backgroundGrid: some View {
@@ -57,10 +46,6 @@ struct ContentView: View {
         .ignoresSafeArea()
     }
 
-    private var panelAnimation: Animation {
-        .spring(response: 0.45, dampingFraction: 0.82, blendDuration: 0.18)
-    }
-
     @ViewBuilder
     private var overlayContent: some View {
         VStack(spacing: 24) {
@@ -74,29 +59,13 @@ struct ContentView: View {
     @ViewBuilder
     private var platformControls: some View {
         ControlSurface(
-            isExpanded: $showSettings,
-            panelAnimation: panelAnimation,
             preset: $preset,
             speed: $speed,
             bias: $bias,
             noise: $noise,
             duration: $duration,
             scale: $scale,
-            frame: $frame,
-            isDarkExperience: prefersDarkExperience,
-            toggleAppearance: toggleExperience
+            frame: $frame
         )
-    }
-
-    private func closeSettings() {
-        withAnimation(panelAnimation) {
-            showSettings = false
-        }
-    }
-
-    private func toggleExperience() {
-        withAnimation(.snappy(duration: 0.3, extraBounce: 0.2)) {
-            prefersDarkExperience.toggle()
-        }
     }
 }
