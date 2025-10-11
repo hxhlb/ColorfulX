@@ -34,7 +34,7 @@ struct ControlSurface: View {
             .padding(24)
         }
         .frame(maxHeight: 320)
-        .glassEffect(.regular.interactive(), in: ConcentricRectangle(corners: .concentric, isUniform: true))
+        .glassEffect(.regular, in: ConcentricRectangle(corners: .concentric, isUniform: true))
         .clipShape(ConcentricRectangle(corners: .concentric, isUniform: true))
         .padding(12)
         .frame(maxHeight: .infinity, alignment: .bottom)
