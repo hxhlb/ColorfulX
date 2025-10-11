@@ -8,199 +8,396 @@
 import ColorfulX
 import SwiftUI
 
-let defaultPreset: ColorfulPreset = .aurora
+private let defaultPreset: ColorfulPreset = .aurora
 
 struct ContentView: View {
-    @AppStorage("preset") var preset: ColorfulPreset = defaultPreset
-    @AppStorage("speed") var speed: Double = 1.0
-    @AppStorage("bias") var bias: Double = 0.01
-    @AppStorage("noise") var noise: Double = 1
-    @AppStorage("duration") var duration: TimeInterval = 3.5
-    @AppStorage("scale") var scale: Double = 1
-    @AppStorage("frame") var frame: Int = 60
+    @AppStorage("preset") private var preset: ColorfulPreset = defaultPreset
+    @AppStorage("speed") private var speed: Double = 1.0
+    @AppStorage("bias") private var bias: Double = 0.01
+    @AppStorage("noise") private var noise: Double = 1
+    @AppStorage("duration") private var duration: TimeInterval = 3.5
+    @AppStorage("scale") private var scale: Double = 1
+    @AppStorage("frame") private var frame: Int = 60
 
-    @State var controlPanelVisible: Bool = true
+    @State private var showSettings = false
+    @State private var prefersDarkExperience = false
+    @Namespace private var namespace
 
     var body: some View {
         ZStack {
-            ColorfulView(
-                color: $preset,
+            backgroundGrid
+            animatedGradient
+            overlayContent
+        }
+        .tint(.black)
+        #if os(iOS)
+            .sheet(isPresented: $showSettings) {
+                SettingsSheet(
+                    preset: $preset,
+                    speed: $speed,
+                    bias: $bias,
+                    noise: $noise,
+                    duration: $duration,
+                    scale: $scale,
+                    frame: $frame
+                )
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
+            .preferredColorScheme(prefersDarkExperience ? .dark : .light)
+        #endif
+    }
+
+    private var backgroundGrid: some View {
+        ChessboardView()
+            .opacity(0.25)
+            .ignoresSafeArea()
+    }
+
+    private var animatedGradient: some View {
+        ColorfulView(
+            color: $preset,
+            speed: $speed,
+            bias: $bias,
+            noise: $noise,
+            transitionSpeed: $duration,
+            frameLimit: $frame,
+            renderScale: $scale
+        )
+        .ignoresSafeArea()
+    }
+
+    @ViewBuilder
+    private var overlayContent: some View {
+        VStack(spacing: 24) {
+            Spacer()
+            platformControls
+            SignatureView()
+        }
+        .padding()
+    }
+
+    @ViewBuilder
+    private var platformControls: some View {
+        #if os(iOS)
+            FloatingControls(
+                showSettings: $showSettings,
+                preset: preset,
+                isDarkExperience: prefersDarkExperience,
+                toggleAppearance: toggleExperience,
+                namespace: namespace
+            )
+        #elseif os(macOS)
+            MacControlPanel(
+                preset: $preset,
                 speed: $speed,
                 bias: $bias,
                 noise: $noise,
-                transitionSpeed: $duration,
-                frameLimit: $frame,
-                renderScale: $scale
+                duration: $duration,
+                scale: $scale,
+                frame: $frame
             )
-            .background(ChessboardView().opacity(0.25))
-            .ignoresSafeArea()
-            VStack {
-                controlPanel
-                    .opacity(controlPanelVisible ? 1 : 0)
-                    .animation(.spring, value: controlPanelVisible)
-                #if os(tvOS)
-                    Button {
-                        preset = ColorfulPreset.allCases.randomElement()!
-                    } label: {
-                        Image(systemName: "wind")
-                    }
-                #endif
+        #elseif os(tvOS)
+            Button(action: randomizePreset) {
+                Image(systemName: "wind")
             }
-
-            Text("Made with love by @Lakr233")
-                .foregroundStyle(.thinMaterial)
-            #if os(macOS)
-                .font(.system(size: 8, weight: .semibold, design: .rounded))
-                .onTapGesture { controlPanelVisible.toggle() }
-            #else
-                .font(.system(size: 12, weight: .semibold, design: .rounded))
-            #endif
-                .frame(maxHeight: .infinity, alignment: .bottom)
-                .padding()
-        }
+            .buttonStyle(.glass)
+        #else
+            EmptyView()
+        #endif
     }
 
-    @ViewBuilder
-    var presetPicker: some View {
-        HStack {
-            #if os(tvOS)
-                Text("\(preset.hint)")
-            #else
-                Text("Preset")
-                Picker("", selection: $preset) {
-                    ForEach(ColorfulPreset.allCases, id: \.self) { preset in
-                        Text(preset.hint).tag(preset)
-                    }
+    private func randomizePreset() {
+        guard let candidate = ColorfulPreset.allCases.randomElement() else { return }
+        preset = candidate
+    }
+
+    private func toggleExperience() {
+        withAnimation(.snappy(duration: 0.3, extraBounce: 0.2)) {
+            prefersDarkExperience.toggle()
+        }
+    }
+}
+
+private struct SignatureView: View {
+    var body: some View {
+        Text("Made with love by @Lakr233")
+            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+    }
+}
+
+private struct GlassCard<Content: View>: View {
+    private let cornerRadius: CGFloat
+    private let padding: CGFloat
+    private let content: Content
+
+    init(cornerRadius: CGFloat = 20, padding: CGFloat = 20, @ViewBuilder content: () -> Content) {
+        self.cornerRadius = cornerRadius
+        self.padding = padding
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+    }
+}
+
+private struct PresetPalette: View {
+    let colors: [ColorElement]
+    let circleSize: CGFloat
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(colors, id: \.self) { color in
+                    Circle()
+                        .fill(Color(color))
+                        .frame(width: circleSize, height: circleSize)
+                        .overlay(
+                            Circle()
+                                .stroke(.white.opacity(0.3), lineWidth: 1)
+                        )
                 }
-                .frame(width: 128)
-            #endif
-            Spacer()
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(preset.colors, id: \.self) { color in
-                        Text("8")
-                            .opacity(0)
-                            .overlay(Circle().foregroundColor(.init(color)))
-                    }
-                }
             }
-            .flipsForRightToLeftLayoutDirection(true)
-            .environment(\.layoutDirection, .rightToLeft)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 4)
         }
     }
+}
 
-    @ViewBuilder
-    var speedPicker: some View {
-        HStack {
-            Text("Speed")
-            Spacer()
-            Text("\(speed, specifier: "%.1f")")
-        }
-        #if os(iOS)
-            Slider(value: $speed, in: 0.0 ... 10.0, step: 0.1) { _ in
+struct ValueSlider: View {
+    let title: String
+    @Binding var value: Double
+    let range: ClosedRange<Double>
+    let step: Double
+    let format: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                Spacer()
+                Text(String(format: format, value))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .monospacedDigit()
             }
-        #endif
-    }
 
-    @ViewBuilder
-    var biasPicker: some View {
-        HStack {
-            Text("BIAS")
-            Spacer()
-            Text("\(bias, specifier: "%.5f")")
+            Slider(value: $value, in: range, step: step)
+                .tint(.black)
         }
-        #if os(iOS)
-            Slider(value: $bias, in: 0.00001 ... 0.01, step: 0.00001) { _ in
-            }
-        #endif
     }
+}
 
-    @ViewBuilder
-    var noisePicker: some View {
-        HStack {
-            Text("Noise")
-            Spacer()
-            Text("\(noise, specifier: "%.2f")")
-        }
-        #if os(iOS)
-            Slider(value: $noise, in: 0 ... 64, step: 1) { _ in
-            }
-        #endif
-    }
+struct FramePickerControl: View {
+    @Binding var frame: Int
 
-    @ViewBuilder
-    var transitionPicker: some View {
-        HStack {
-            Text("Transition Speed")
-            Spacer()
-            Text("\(duration, specifier: "%.2f")")
-        }
-        #if os(iOS)
-            Slider(value: $duration, in: 0.0 ... 10.0, step: 0.1) { _ in
-            }
-        #endif
-    }
-
-    @ViewBuilder
-    var framePicker: some View {
-        HStack {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Frame Limit")
-            Spacer()
-            Text("\(frame)")
-        }
-        #if os(iOS)
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundStyle(.secondary)
+
             Picker("", selection: $frame) {
-                ForEach([0, 15, 30, 60, 120], id: \.self) { frame in
-                    Text("\(frame)").tag(frame)
+                ForEach([0, 15, 30, 60, 120], id: \.self) { option in
+                    Text(option == 0 ? "Unlimited" : "\(option) FPS").tag(option)
                 }
             }
             .pickerStyle(.segmented)
-        #endif
-    }
-
-    @ViewBuilder
-    var scalePicker: some View {
-        HStack {
-            Text("Scale")
-            Spacer()
-            Text("\(scale, specifier: "%.4f")")
+            .tint(.black)
         }
-        #if os(iOS)
-            Slider(value: $scale, in: 0.001 ... 2.0, step: 0.001) { _ in
-            }
-        #endif
-    }
-
-    var controlPanel: some View {
-        VStack(spacing: 8) {
-            presetPicker
-            Divider()
-            speedPicker
-            Divider()
-            biasPicker
-            Divider()
-            noisePicker
-            Divider()
-            transitionPicker
-            Divider()
-            scalePicker
-            Divider()
-            framePicker
-        }
-        .frame(width: 328)
-        #if os(macOS)
-            .font(.system(size: 12, weight: .semibold, design: .rounded))
-        #else
-            .font(.system(size: 16, weight: .semibold, design: .rounded))
-        #endif
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(.regularMaterial)
-            )
-            .padding(6)
-        #if os(visionOS)
-            .padding(32)
-        #endif
     }
 }
+
+#if os(macOS)
+    private struct MacControlPanel: View {
+        @Binding var preset: ColorfulPreset
+        @Binding var speed: Double
+        @Binding var bias: Double
+        @Binding var noise: Double
+        @Binding var duration: TimeInterval
+        @Binding var scale: Double
+        @Binding var frame: Int
+
+        var body: some View {
+            GlassCard(cornerRadius: 16, padding: 24) {
+                VStack(spacing: 16) {
+                    MacPresetPicker(preset: $preset)
+                    Divider()
+                    ValueSlider(title: "Speed", value: $speed, range: 0.0 ... 10.0, step: 0.1, format: "%.1f")
+                    Divider()
+                    ValueSlider(title: "Bias", value: $bias, range: 0.00001 ... 0.01, step: 0.00001, format: "%.5f")
+                    Divider()
+                    ValueSlider(title: "Noise", value: $noise, range: 0 ... 64, step: 1, format: "%.0f")
+                    Divider()
+                    ValueSlider(title: "Transition", value: $duration, range: 0.0 ... 10.0, step: 0.1, format: "%.1f")
+                    Divider()
+                    ValueSlider(title: "Scale", value: $scale, range: 0.001 ... 2.0, step: 0.001, format: "%.3f")
+                    Divider()
+                    FramePickerControl(frame: $frame)
+                }
+                .frame(width: 360)
+            }
+        }
+    }
+
+    private struct MacPresetPicker: View {
+        @Binding var preset: ColorfulPreset
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Preset")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Picker("", selection: $preset) {
+                        ForEach(ColorfulPreset.allCases, id: \.self) { option in
+                            Text(option.hint).tag(option)
+                        }
+                    }
+                    .frame(width: 160)
+                    .tint(.black)
+                }
+
+                PresetPalette(colors: preset.colors, circleSize: 28)
+            }
+        }
+    }
+#endif
+
+#if os(iOS)
+    private struct FloatingControls: View {
+        @Binding var showSettings: Bool
+        let preset: ColorfulPreset
+        let isDarkExperience: Bool
+        let toggleAppearance: () -> Void
+        let namespace: Namespace.ID
+
+        private var displayIndex: Int {
+            (ColorfulPreset.allCases.firstIndex(of: preset) ?? 0) + 1
+        }
+
+        var body: some View {
+            GlassEffectContainer(spacing: 20) {
+                HStack(spacing: 16) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        HStack(spacing: 12) {
+                            Text(displayIndex, format: .number.precision(.integerLength(2)))
+                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .monospacedDigit()
+                                .contentTransition(.numericText())
+
+                            Text(preset.hint)
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .contentTransition(.opacity)
+
+                            Image(systemName: "slider.horizontal.3")
+                                .font(.system(size: 16, weight: .semibold))
+                                .symbolVariant(.fill)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                    }
+                    .tint(.black)
+                    .glassEffect(.regular.interactive())
+                    .glassEffectID("settings", in: namespace)
+
+                    Button(action: toggleAppearance) {
+                        Image(systemName: isDarkExperience ? "sun.max.fill" : "moon.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                            .frame(width: 44, height: 44)
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                    .tint(.black)
+                    .glassEffect(.regular.interactive())
+                    .glassEffectID("appearance", in: namespace)
+                    .accessibilityLabel(isDarkExperience ? "Switch to light experience" : "Switch to dark experience")
+                }
+            }
+            .tint(.black)
+        }
+    }
+
+    private struct PresetWheel: View {
+        @Binding var preset: ColorfulPreset
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Preset")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 4)
+
+                Picker("", selection: $preset) {
+                    ForEach(ColorfulPreset.allCases, id: \.self) { option in
+                        Text(option.hint).tag(option)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .tint(.black)
+                .frame(height: 120)
+
+                PresetPalette(colors: preset.colors, circleSize: 40)
+            }
+        }
+    }
+
+    struct SettingsSheet: View {
+        @Binding var preset: ColorfulPreset
+        @Binding var speed: Double
+        @Binding var bias: Double
+        @Binding var noise: Double
+        @Binding var duration: TimeInterval
+        @Binding var scale: Double
+        @Binding var frame: Int
+
+        @Environment(\.dismiss) private var dismiss
+
+        var body: some View {
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        GlassCard {
+                            PresetWheel(preset: $preset)
+                        }
+                        .padding(.horizontal, 16)
+
+                        GlassCard {
+                            VStack(spacing: 20) {
+                                ValueSlider(title: "Speed", value: $speed, range: 0.0 ... 10.0, step: 0.1, format: "%.1f")
+                                ValueSlider(title: "Bias", value: $bias, range: 0.00001 ... 0.01, step: 0.00001, format: "%.5f")
+                                ValueSlider(title: "Noise", value: $noise, range: 0 ... 64, step: 1, format: "%.0f")
+                                ValueSlider(title: "Transition", value: $duration, range: 0.0 ... 10.0, step: 0.1, format: "%.1f")
+                                ValueSlider(title: "Scale", value: $scale, range: 0.001 ... 2.0, step: 0.001, format: "%.3f")
+                            }
+                        }
+                        .padding(.horizontal, 16)
+
+                        GlassCard {
+                            FramePickerControl(frame: $frame)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .padding(.vertical, 24)
+                }
+                .navigationTitle("Settings")
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Done", action: dismiss.callAsFunction)
+                            .buttonStyle(.glass)
+                    }
+                }
+                .tint(.black)
+            }
+        }
+    }
+#endif
