@@ -10,13 +10,6 @@ import MetalKit
 
 private enum MetalProgram: String {
     case colorful = """
-    //
-    //  MeshGradient.metal
-    //  BlobToy
-    //
-    //  Created by Lakr233 on 2024/07/04.
-    //
-
     #include <metal_stdlib>
 
     using namespace metal;
