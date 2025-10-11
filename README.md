@@ -45,6 +45,12 @@ Xcode users can also add the package through **File → Add Packages…** and pa
 
 ## SwiftUI Usage
 
+### Just One Line
+
+```swift
+ColorfulView(color: .aurora)
+```
+
 ### Animated Gradient
 
 ```swift
@@ -78,6 +84,8 @@ struct AnimatedGradientDemo: View {
 `ColorfulView` also accepts bindings to `[Color]`, constant presets (`ColorfulPreset`), or any custom type conforming to `ColorfulColors`. Internally the view converts data to `ColorVector` instances and feeds `AnimatedMulticolorGradientViewRepresentable`.
 
 ### Static Gradient
+
+*Generally, we recommend using `ColorfulView` with `speed` set to `0` for that.*
 
 For non-animated backgrounds use `MulticolorGradient` (SwiftUI wrapper for `MulticolorGradientView`):
 
