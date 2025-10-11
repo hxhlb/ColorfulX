@@ -43,6 +43,7 @@ struct ContentView: View {
                 scale: $scale,
                 frame: $frame
             )
+            .padding(.top, 32)
         }
         .ignoresSafeArea()
     }
