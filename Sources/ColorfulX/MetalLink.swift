@@ -5,6 +5,7 @@
 //  Created by QAQ on 2023/12/4.
 //
 
+import CoreGraphics
 import Foundation
 import MetalKit
 import MSDisplayLink
@@ -37,9 +38,13 @@ class MetalLink: DisplayLinkDelegate {
 
         let metalLayer = CAMetalLayer()
         metalLayer.device = metalDevice
+        metalLayer.pixelFormat = .bgra8Unorm
+        metalLayer.colorspace = CGColorSpace(name: CGColorSpace.sRGB)
         metalLayer.framebufferOnly = false
         metalLayer.isOpaque = false
         metalLayer.presentsWithTransaction = false
+        metalLayer.backgroundColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+        metalLayer.allowsNextDrawableTimeout = false
         metalLayer.actions = [
             "position": NSNull(),
             "bounds": NSNull(),
@@ -48,7 +53,7 @@ class MetalLink: DisplayLinkDelegate {
             "sublayerTransform": NSNull(),
             "contents": NSNull(),
             "contentsRect": NSNull(),
-            "contentsCenter": NSNull()
+            "contentsCenter": NSNull(),
         ]
 
         self.metalLayer = metalLayer

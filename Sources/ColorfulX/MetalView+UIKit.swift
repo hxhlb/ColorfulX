@@ -15,6 +15,8 @@
         init() {
             super.init(frame: .zero)
             backgroundColor = .clear
+            layer.isOpaque = false
+            layer.backgroundColor = UIColor.clear.cgColor
 
             guard let metalLink else { return }
 
