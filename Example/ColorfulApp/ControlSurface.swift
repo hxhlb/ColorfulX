@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ControlSurface: View {
     @State var isExpanded: Bool = false
+    @State var isExpandedContent: Bool = false
 
     let panelAnimation: Animation = .spring
     @Binding var preset: ColorfulPreset
@@ -22,7 +23,7 @@ struct ControlSurface: View {
 
     var body: some View {
         ZStack {
-            if isExpanded {
+            if isExpandedContent {
                 controls
                     .transition(.opacity)
             } else {
@@ -40,6 +41,13 @@ struct ControlSurface: View {
         .animation(panelAnimation, value: isExpanded)
         .onReceive(NotificationCenter.default.publisher(for: .closeControls)) { _ in
             isExpanded = false
+        }
+        .onChange(of: isExpanded) { _, newValue in
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                withAnimation(.spring) {
+                    isExpandedContent = newValue
+                }
+            }
         }
     }
 
