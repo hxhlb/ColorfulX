@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		500E7C462C6F5397001D7AA1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500E7C452C6F5397001D7AA1 /* main.swift */; };
+		504EB7D12E9A6E30004985E8 /* GlassPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D02E9A6E30004985E8 /* GlassPanel.swift */; };
+		504EB7D32E9A6E39004985E8 /* ControlSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D22E9A6E39004985E8 /* ControlSurface.swift */; };
+		504EB7D52E9A6E4B004985E8 /* PresetWheel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D42E9A6E4B004985E8 /* PresetWheel.swift */; };
+		504EB7D72E9A6E59004985E8 /* PresetPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D62E9A6E59004985E8 /* PresetPalette.swift */; };
+		504EB7D92E9A6E9D004985E8 /* ValueSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D82E9A6E9D004985E8 /* ValueSlider.swift */; };
+		504EB7DB2E9A6EA0004985E8 /* FramePickerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */; };
+		504EB7DD2E9A6EA9004985E8 /* SignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */; };
 		507C2F092C36FB1000BCB5FA /* ChessboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C2F082C36FB1000BCB5FA /* ChessboardView.swift */; };
 		50C663882B19B04800AF7053 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C663872B19B04800AF7053 /* App.swift */; };
 		50C6638A2B19B04800AF7053 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C663892B19B04800AF7053 /* ContentView.swift */; };
@@ -17,6 +24,13 @@
 
 /* Begin PBXFileReference section */
 		500E7C452C6F5397001D7AA1 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		504EB7D02E9A6E30004985E8 /* GlassPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassPanel.swift; sourceTree = "<group>"; };
+		504EB7D22E9A6E39004985E8 /* ControlSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlSurface.swift; sourceTree = "<group>"; };
+		504EB7D42E9A6E4B004985E8 /* PresetWheel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetWheel.swift; sourceTree = "<group>"; };
+		504EB7D62E9A6E59004985E8 /* PresetPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetPalette.swift; sourceTree = "<group>"; };
+		504EB7D82E9A6E9D004985E8 /* ValueSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSlider.swift; sourceTree = "<group>"; };
+		504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramePickerControl.swift; sourceTree = "<group>"; };
+		504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureView.swift; sourceTree = "<group>"; };
 		507C2F082C36FB1000BCB5FA /* ChessboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessboardView.swift; sourceTree = "<group>"; };
 		50C663842B19B04800AF7053 /* ColorfulApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorfulApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C663872B19B04800AF7053 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -60,6 +74,13 @@
 				500E7C452C6F5397001D7AA1 /* main.swift */,
 				50C663872B19B04800AF7053 /* App.swift */,
 				50C663892B19B04800AF7053 /* ContentView.swift */,
+				504EB7D02E9A6E30004985E8 /* GlassPanel.swift */,
+				504EB7D42E9A6E4B004985E8 /* PresetWheel.swift */,
+				504EB7D82E9A6E9D004985E8 /* ValueSlider.swift */,
+				504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */,
+				504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */,
+				504EB7D62E9A6E59004985E8 /* PresetPalette.swift */,
+				504EB7D22E9A6E39004985E8 /* ControlSurface.swift */,
 				507C2F082C36FB1000BCB5FA /* ChessboardView.swift */,
 				50C6638B2B19B04900AF7053 /* Assets.xcassets */,
 				50C6638D2B19B04900AF7053 /* ColorfulApp.entitlements */,
@@ -146,9 +167,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				504EB7D72E9A6E59004985E8 /* PresetPalette.swift in Sources */,
+				504EB7DB2E9A6EA0004985E8 /* FramePickerControl.swift in Sources */,
 				50C6638A2B19B04800AF7053 /* ContentView.swift in Sources */,
 				507C2F092C36FB1000BCB5FA /* ChessboardView.swift in Sources */,
+				504EB7D52E9A6E4B004985E8 /* PresetWheel.swift in Sources */,
 				500E7C462C6F5397001D7AA1 /* main.swift in Sources */,
+				504EB7D92E9A6E9D004985E8 /* ValueSlider.swift in Sources */,
+				504EB7D32E9A6E39004985E8 /* ControlSurface.swift in Sources */,
+				504EB7DD2E9A6EA9004985E8 /* SignatureView.swift in Sources */,
+				504EB7D12E9A6E30004985E8 /* GlassPanel.swift in Sources */,
 				50C663882B19B04800AF7053 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
