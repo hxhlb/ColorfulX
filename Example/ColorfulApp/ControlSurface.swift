@@ -18,13 +18,6 @@ struct ControlSurface: View {
     @Binding var frame: Int
 
     var body: some View {
-        controls
-            .contentShape(Rectangle())
-            .clipped()
-            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 16))
-    }
-
-    var controls: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 16) {
                 PresetPickerView(preset: $preset)
@@ -38,10 +31,12 @@ struct ControlSurface: View {
                 ValueSliderView(title: "Scale", value: $scale, range: 0.001 ... 2.0, step: 0.001, format: "%.3f")
                 FramePickerControl(frame: $frame)
             }
-            .padding(16)
-            .frame(width: 350)
+            .padding(24)
         }
         .frame(maxHeight: 320)
-        .frame(width: 350)
+        .glassEffect(.regular.interactive(), in: ConcentricRectangle(corners: .concentric, isUniform: true))
+        .clipShape(ConcentricRectangle(corners: .concentric, isUniform: true))
+        .padding(12)
+        .frame(maxHeight: .infinity, alignment: .bottom)
     }
 }

@@ -21,51 +21,29 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            backgroundGrid
-            animatedGradient
-            overlayContent
+            ChessboardView()
+                .opacity(0.25)
+
+            ColorfulView(
+                color: $preset,
+                speed: $speed,
+                bias: $bias,
+                noise: $noise,
+                transitionSpeed: $duration,
+                frameLimit: $frame,
+                renderScale: $scale
+            )
+
+            ControlSurface(
+                preset: $preset,
+                speed: $speed,
+                bias: $bias,
+                noise: $noise,
+                duration: $duration,
+                scale: $scale,
+                frame: $frame
+            )
         }
-    }
-
-    private var backgroundGrid: some View {
-        ChessboardView()
-            .opacity(0.25)
-            .ignoresSafeArea()
-    }
-
-    private var animatedGradient: some View {
-        ColorfulView(
-            color: $preset,
-            speed: $speed,
-            bias: $bias,
-            noise: $noise,
-            transitionSpeed: $duration,
-            frameLimit: $frame,
-            renderScale: $scale
-        )
         .ignoresSafeArea()
-    }
-
-    @ViewBuilder
-    private var overlayContent: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            platformControls
-            SignatureView()
-        }
-        .padding()
-    }
-
-    @ViewBuilder
-    private var platformControls: some View {
-        ControlSurface(
-            preset: $preset,
-            speed: $speed,
-            bias: $bias,
-            noise: $noise,
-            duration: $duration,
-            scale: $scale,
-            frame: $frame
-        )
     }
 }

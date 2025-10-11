@@ -12,7 +12,6 @@
 		504EB7D52E9A6E4B004985E8 /* PresetPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D42E9A6E4B004985E8 /* PresetPickerView.swift */; };
 		504EB7D92E9A6E9D004985E8 /* ValueSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7D82E9A6E9D004985E8 /* ValueSliderView.swift */; };
 		504EB7DB2E9A6EA0004985E8 /* FramePickerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */; };
-		504EB7DD2E9A6EA9004985E8 /* SignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */; };
 		507C2F092C36FB1000BCB5FA /* ChessboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507C2F082C36FB1000BCB5FA /* ChessboardView.swift */; };
 		50C663882B19B04800AF7053 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C663872B19B04800AF7053 /* App.swift */; };
 		50C6638A2B19B04800AF7053 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C663892B19B04800AF7053 /* ContentView.swift */; };
@@ -26,7 +25,6 @@
 		504EB7D42E9A6E4B004985E8 /* PresetPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetPickerView.swift; sourceTree = "<group>"; };
 		504EB7D82E9A6E9D004985E8 /* ValueSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSliderView.swift; sourceTree = "<group>"; };
 		504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramePickerControl.swift; sourceTree = "<group>"; };
-		504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignatureView.swift; sourceTree = "<group>"; };
 		507C2F082C36FB1000BCB5FA /* ChessboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessboardView.swift; sourceTree = "<group>"; };
 		50C663842B19B04800AF7053 /* ColorfulApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorfulApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C663872B19B04800AF7053 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -73,7 +71,6 @@
 				504EB7D42E9A6E4B004985E8 /* PresetPickerView.swift */,
 				504EB7D82E9A6E9D004985E8 /* ValueSliderView.swift */,
 				504EB7DA2E9A6EA0004985E8 /* FramePickerControl.swift */,
-				504EB7DC2E9A6EA9004985E8 /* SignatureView.swift */,
 				504EB7D22E9A6E39004985E8 /* ControlSurface.swift */,
 				507C2F082C36FB1000BCB5FA /* ChessboardView.swift */,
 				50C6638B2B19B04900AF7053 /* Assets.xcassets */,
@@ -168,7 +165,6 @@
 				500E7C462C6F5397001D7AA1 /* main.swift in Sources */,
 				504EB7D92E9A6E9D004985E8 /* ValueSliderView.swift in Sources */,
 				504EB7D32E9A6E39004985E8 /* ControlSurface.swift in Sources */,
-				504EB7DD2E9A6EA9004985E8 /* SignatureView.swift in Sources */,
 				50C663882B19B04800AF7053 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
