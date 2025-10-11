@@ -49,7 +49,6 @@ Xcode users can also add the package through **File → Add Packages…** and pa
 
 You do `import ColorfulX` and then `ColorfulView(color: .aurora)`. Done.
 
-
 ### Animated Gradient
 
 ```swift
@@ -84,7 +83,7 @@ struct AnimatedGradientDemo: View {
 
 ### Static Gradient
 
-*Generally, we recommend using `ColorfulView` with `speed` set to `0` for that.*
+_Generally, we recommend using `ColorfulView` with `speed` set to `0` for that._
 
 For non-animated backgrounds use `MulticolorGradient` (SwiftUI wrapper for `MulticolorGradientView`):
 
