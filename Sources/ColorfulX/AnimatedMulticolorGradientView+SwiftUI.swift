@@ -17,6 +17,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
     @Binding var frameLimit: Int
     @Binding var renderScale: Double
 
+    let animationDirector: SpeckleAnimationDirector
     let repeats: Bool
 
     public init(
@@ -27,6 +28,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
         transitionSpeed: Binding<Double> = .constant(3.25),
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1),
+        animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
         repeats: Bool = true
     ) {
         _color = color
@@ -37,12 +39,14 @@ public struct AnimatedMulticolorGradientViewRepresentable {
         _frameLimit = frameLimit
         _renderScale = renderScale
 
+        self.animationDirector = animationDirector
         self.repeats = repeats
     }
 
     public func updatePropertyToView(_ view: AnimatedMulticolorGradientView, initialSetup: Bool) {
         view.frameLimit = frameLimit
         view.renderScale = renderScale
+        view.animationDirector = animationDirector
 
         view.setColors(
             color,
@@ -62,6 +66,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
     extension AnimatedMulticolorGradientViewRepresentable: UIViewRepresentable {
         public func makeUIView(context _: Context) -> AnimatedMulticolorGradientView {
             let view = AnimatedMulticolorGradientView()
+            view.animationDirector = animationDirector
             updatePropertyToView(view, initialSetup: true)
             return view
         }
@@ -78,6 +83,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
     extension AnimatedMulticolorGradientViewRepresentable: NSViewRepresentable {
         public func makeNSView(context _: Context) -> AnimatedMulticolorGradientView {
             let view = AnimatedMulticolorGradientView()
+            view.animationDirector = animationDirector
             updatePropertyToView(view, initialSetup: true)
             return view
         }

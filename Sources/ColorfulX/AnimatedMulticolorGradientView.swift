@@ -32,7 +32,7 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
         didSet { renderInputWasModified = true }
     }
 
-    public var animationDirector: SpeckleAnimationDirector {
+    public var animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector() {
         willSet {
             guard animationDirector !== newValue else { return }
             animationDirector.detach()
@@ -69,8 +69,10 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
     // MARK: - FUNCTION
 
     override public init() {
-        animationDirector = SpeckleAnimationRandomDirector()
-        speckles = .init(repeating: .init(position: SPRING_ENGINE), count: Uniforms.COLOR_SLOT)
+        speckles = .init(
+            repeating: .init(position: SPRING_ENGINE),
+            count: Uniforms.COLOR_SLOT
+        )
         super.init()
         animationDirector.attach(to: self)
         initializeRenderParameters()
