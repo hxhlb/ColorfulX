@@ -28,6 +28,8 @@ struct PresetPickerView: View {
             }
             #if os(macOS)
             .pickerStyle(.menu)
+            #elseif os(tvOS)
+            .pickerStyle(.automatic)
             #else
             .pickerStyle(.wheel)
             #endif

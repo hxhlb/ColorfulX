@@ -27,7 +27,13 @@ struct ValueSliderView: View {
             }
             .animation(.interactiveSpring, value: value)
 
-            Slider(value: $value, in: range, step: step)
+            #if os(tvOS)
+                Text("Adjust this value on a supported platform.")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            #else
+                Slider(value: $value, in: range, step: step)
+            #endif
         }
     }
 }
