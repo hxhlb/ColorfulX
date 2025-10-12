@@ -34,9 +34,11 @@ struct ControlSurface: View {
             .padding(24)
         }
         .frame(maxWidth: 444, maxHeight: 444)
-        .glassEffect(.regular, in: ConcentricRectangle(corners: .concentric(minimum: 16), isUniform: true))
-        .clipShape(ConcentricRectangle(corners: .concentric(minimum: 16), isUniform: true))
-        .padding(12)
-        .frame(maxHeight: .infinity, alignment: .bottom)
+        #if !os(visionOS)
+            .glassEffect(.regular, in: ConcentricRectangle(corners: .concentric(minimum: 16), isUniform: true))
+        #endif
+            .clipShape(ConcentricRectangle(corners: .concentric(minimum: 16), isUniform: true))
+            .padding(12)
+            .frame(maxHeight: .infinity, alignment: .bottom)
     }
 }
