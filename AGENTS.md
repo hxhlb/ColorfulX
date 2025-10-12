@@ -76,7 +76,7 @@ ColorfulX is a Metal-backed gradient renderer for Apple platforms that combines 
 
 - `SpeckleAnimationDirector` (Sources/ColorfulX/SpeckleAnimationDirector.swift:8) - Abstract animation director protocol
 - `SpeckleAnimationRandomDirector` (Sources/ColorfulX/SpeckleAnimationRandomDirector.swift:8) - Default random animation director
-- `animationDirector` property in `AnimatedMulticolorGradientView` (Sources/ColorfulX/AnimatedMulticolorGradientView.swift:35) - Configurable animation behavior
+- `animationDirector` property in `AnimatedMulticolorGradientView` (Sources/ColorfulX/AnimatedMulticolorGradientView.swift:35) - Immutable animation behavior set at initialization
 
 **Color System:**
 

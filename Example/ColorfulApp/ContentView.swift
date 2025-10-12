@@ -19,6 +19,8 @@ struct ContentView: View {
     @AppStorage("scale") private var scale: Double = 1
     @AppStorage("frame") private var frame: Int = 60
 
+    @State var shouldHideControls = false
+
     var body: some View {
         ZStack {
             ChessboardView()
@@ -34,6 +36,9 @@ struct ContentView: View {
                 renderScale: $scale,
                 animationDirector: SpeckleAnimationRoundedRectangleDirector()
             )
+            .onTapGesture {
+                shouldHideControls.toggle()
+            }
 
             ControlSurface(
                 preset: $preset,
@@ -44,6 +49,8 @@ struct ContentView: View {
                 scale: $scale,
                 frame: $frame
             )
+            .opacity(shouldHideControls ? 0 : 1)
+            .animation(.interactiveSpring, value: shouldHideControls)
             .padding(.top, 32)
         }
         .ignoresSafeArea()

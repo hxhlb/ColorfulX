@@ -79,7 +79,7 @@ struct AnimatedGradientDemo: View {
 }
 ```
 
-`ColorfulView` also accepts bindings to `[Color]`, constant presets (`ColorfulPreset`), or any custom type conforming to `ColorfulColors`. Internally the view converts data to `ColorVector` instances and feeds `AnimatedMulticolorGradientViewRepresentable`.
+`ColorfulView` also accepts bindings to `[Color]`, constant presets (`ColorfulPreset`), or any custom type conforming to `ColorfulColors`. The `animationDirector` parameter allows customizing animation behavior (e.g., using `SpeckleAnimationRoundedRectangleDirector` for path-based movement). Internally the view converts data to `ColorVector` instances and feeds `AnimatedMulticolorGradientViewRepresentable`.
 
 ### Static Gradient
 

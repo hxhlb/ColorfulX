@@ -73,6 +73,7 @@ public struct ColorfulView: View {
             animationDirector: animationDirector,
             repeats: repeats
         )
+        .contentShape(Rectangle())
     }
 }
 
