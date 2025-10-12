@@ -32,6 +32,18 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
         didSet { renderInputWasModified = true }
     }
 
+    public var animationDirector: SpeckleAnimationDirector {
+        willSet {
+            guard animationDirector !== newValue else { return }
+            animationDirector.detach()
+        }
+        didSet {
+            guard animationDirector !== oldValue else { return }
+            animationDirector.attach(to: self)
+            initializeRenderParameters()
+        }
+    }
+
     private let specklesAccessLock = NSLock()
 
     public var speed: Double = 1.0 {
@@ -57,8 +69,10 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
     // MARK: - FUNCTION
 
     override public init() {
+        animationDirector = SpeckleAnimationRandomDirector()
         speckles = .init(repeating: .init(position: SPRING_ENGINE), count: Uniforms.COLOR_SLOT)
         super.init()
+        animationDirector.attach(to: self)
         initializeRenderParameters()
     }
 
