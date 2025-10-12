@@ -31,7 +31,8 @@ struct ContentView: View {
                 noise: $noise,
                 transitionSpeed: $duration,
                 frameLimit: $frame,
-                renderScale: $scale
+                renderScale: $scale,
+                animationDirector: SpeckleAnimationRoundedRectangleDirector()
             )
 
             ControlSurface(

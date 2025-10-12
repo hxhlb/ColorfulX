@@ -32,17 +32,7 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
         didSet { renderInputWasModified = true }
     }
 
-    public var animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector() {
-        willSet {
-            guard animationDirector !== newValue else { return }
-            animationDirector.detach()
-        }
-        didSet {
-            guard animationDirector !== oldValue else { return }
-            animationDirector.attach(to: self)
-            initializeRenderParameters()
-        }
-    }
+    public let animationDirector: SpeckleAnimationDirector
 
     private let specklesAccessLock = NSLock()
 
@@ -68,14 +58,23 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
 
     // MARK: - FUNCTION
 
-    override public init() {
+    public init(animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector()) {
+        self.animationDirector = animationDirector
         speckles = .init(
             repeating: .init(position: SPRING_ENGINE),
             count: Uniforms.COLOR_SLOT
         )
         super.init()
-        animationDirector.attach(to: self)
+        self.animationDirector.attach(to: self)
         initializeRenderParameters()
+    }
+
+    override public convenience init() {
+        self.init(animationDirector: SpeckleAnimationRandomDirector())
+    }
+
+    deinit {
+        animationDirector.detach()
     }
 
     // MARK: - GETTER

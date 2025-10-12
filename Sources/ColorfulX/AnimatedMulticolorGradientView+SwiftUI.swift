@@ -46,7 +46,6 @@ public struct AnimatedMulticolorGradientViewRepresentable {
     public func updatePropertyToView(_ view: AnimatedMulticolorGradientView, initialSetup: Bool) {
         view.frameLimit = frameLimit
         view.renderScale = renderScale
-        view.animationDirector = animationDirector
 
         view.setColors(
             color,
@@ -65,8 +64,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
 
     extension AnimatedMulticolorGradientViewRepresentable: UIViewRepresentable {
         public func makeUIView(context _: Context) -> AnimatedMulticolorGradientView {
-            let view = AnimatedMulticolorGradientView()
-            view.animationDirector = animationDirector
+            let view = AnimatedMulticolorGradientView(animationDirector: animationDirector)
             updatePropertyToView(view, initialSetup: true)
             return view
         }
@@ -82,8 +80,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
 
     extension AnimatedMulticolorGradientViewRepresentable: NSViewRepresentable {
         public func makeNSView(context _: Context) -> AnimatedMulticolorGradientView {
-            let view = AnimatedMulticolorGradientView()
-            view.animationDirector = animationDirector
+            let view = AnimatedMulticolorGradientView(animationDirector: animationDirector)
             updatePropertyToView(view, initialSetup: true)
             return view
         }
