@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 cd ..
 
-WORKSPACE="./Example/ColorfulApp.xcworkspace"
+WORKSPACE="./Example/Workspace.xcworkspace"
 SCEHEME="ColorfulApp"
 
 function test_build() {

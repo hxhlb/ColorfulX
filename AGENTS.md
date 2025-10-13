@@ -124,7 +124,7 @@ ColorfulX is a Metal-backed gradient renderer for Apple platforms that combines 
 ## Development Workflow
 
 1. Make changes to Sources/ColorfulX/
-2. Test with Example app (Example/ColorfulApp.xcworkspace)
+2. Test with Example app (Example/Workspace.xcworkspace)
 3. Run `./Scripts/test.build.sh` to verify builds for all platforms
 4. Commit changes
 

@@ -5,6 +5,7 @@
 //  Created by GitHub Copilot on 2025/10/12.
 //
 
+import CoreGraphics
 import Foundation
 
 open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
@@ -27,6 +28,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
     public var inset: Double {
         get { insetValue }
         set {
+            assert(newValue <= 1, "Inset must be less than or equal to 1; use negative values to extend outside the unit square.")
             let clamped = Self.clampInset(newValue)
             guard clamped != insetValue else { return }
             insetValue = clamped
@@ -83,6 +85,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
     private var distributionIndices: [Int]
 
     private static let numericEpsilon: Double = 1e-6
+    private static let outerInsetLimit: Double = 1
 
     public init(
         inset: Double = 0.1,
@@ -91,6 +94,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
         movementRate: Double = 0.25,
         positionResponseRate: Double = 0.5
     ) {
+        precondition(inset <= 1, "Inset must be less than or equal to 1; use negative values to extend outside the unit square.")
         directionValue = direction
         insetValue = Self.clampInset(inset)
         cornerRadiusValue = Self.clampRadius(cornerRadius)
@@ -103,6 +107,14 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
         pathCache = .empty
         pathNeedsUpdate = true
         super.init()
+    }
+
+    override open func attach(to view: AnimatedMulticolorGradientView) {
+        super.attach(to: view)
+    }
+
+    override open func detach() {
+        super.detach()
     }
 
     override open func initialize() {
@@ -241,7 +253,12 @@ private extension SpeckleAnimationRoundedRectangleDirector {
         }
     }
 
-    static func clampInset(_ value: Double) -> Double { clamp(value, lower: 0, upper: 0.45) }
+    static func clampInset(_ value: Double) -> Double {
+        if value >= 0 {
+            return clamp(value, lower: 0, upper: 1)
+        }
+        return max(value, -outerInsetLimit)
+    }
 
     static func clampRadius(_ value: Double) -> Double { max(0, min(value, 0.5)) }
 
@@ -277,8 +294,14 @@ private extension SpeckleAnimationRoundedRectangleDirector {
     func advanceProgress(for view: AnimatedMulticolorGradientView, deltaTime: Double) {
         let delta = deltaTime * view.speed * movementRateValue * directionValue.sign
         guard abs(delta) > Self.numericEpsilon else { return }
-        for index in 0 ..< view.speckles.count {
-            progressState[index] = wrap(progressState[index] + delta)
+        if distributionIndices.isEmpty {
+            for index in view.speckles.indices {
+                progressState[index] = wrap(progressState[index] + delta)
+            }
+        } else {
+            for index in distributionIndices {
+                progressState[index] = wrap(progressState[index] + delta)
+            }
         }
     }
 
