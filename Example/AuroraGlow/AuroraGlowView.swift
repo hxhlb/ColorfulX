@@ -17,11 +17,11 @@ class AuroraGlowView: NSView {
     let colorful: AnimatedMulticolorGradientView = {
         let view = AnimatedMulticolorGradientView(
             animationDirector: SpeckleAnimationRoundedRectangleDirector(
-                inset: 0.1,
-                cornerRadius: 0.4,
+                inset: -0.2,
+                cornerRadius: 1,
                 direction: .clockwise,
-                movementRate: 0.25,
-                positionResponseRate: 0.5
+                movementRate: 0.1,
+                positionResponseRate: 1
             )
         )
         view.setColors(.appleIntelligence, animated: false, repeats: true)

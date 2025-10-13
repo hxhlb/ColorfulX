@@ -85,7 +85,6 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
     private var distributionIndices: [Int]
 
     private static let numericEpsilon: Double = 1e-6
-    private static let outerInsetLimit: Double = 1
 
     public init(
         inset: Double = 0.1,
@@ -257,7 +256,7 @@ private extension SpeckleAnimationRoundedRectangleDirector {
         if value >= 0 {
             return clamp(value, lower: 0, upper: 1)
         }
-        return max(value, -outerInsetLimit)
+        return value
     }
 
     static func clampRadius(_ value: Double) -> Double { max(0, min(value, 0.5)) }
