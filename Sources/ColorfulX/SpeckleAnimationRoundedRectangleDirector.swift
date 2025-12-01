@@ -579,62 +579,23 @@ private extension SpeckleAnimationRoundedRectangleDirector {
                 return
             }
 
+            // Sample the path using samplePoint to ensure consistency with speckle positions
             let bezierPath = NSBezierPath()
-            var isFirstPoint = true
+            let sampleCount = 100
 
-            for segment in pathCache.segments {
-                switch segment.kind {
-                case let .line(start, end):
-                    // Flip Y coordinate: macOS uses bottom-left origin
-                    let startPoint = CGPoint(
-                        x: start.x * bounds.width,
-                        y: (1.0 - start.y) * bounds.height,
-                    )
-                    let endPoint = CGPoint(
-                        x: end.x * bounds.width,
-                        y: (1.0 - end.y) * bounds.height,
-                    )
+            for i in 0 ..< sampleCount {
+                let progress = Double(i) / Double(sampleCount)
+                let pathPoint = samplePoint(at: progress)
 
-                    if isFirstPoint {
-                        bezierPath.move(to: startPoint)
-                        isFirstPoint = false
-                    }
-                    bezierPath.line(to: endPoint)
+                let screenPoint = CGPoint(
+                    x: pathPoint.x * bounds.width,
+                    y: (1.0 - pathPoint.y) * bounds.height,
+                )
 
-                case let .arc(center, radius, startAngle, endAngle):
-                    // Flip Y coordinate: macOS uses bottom-left origin
-                    let centerPoint = CGPoint(
-                        x: center.x * bounds.width,
-                        y: (1.0 - center.y) * bounds.height,
-                    )
-                    // Scale radius uniformly based on the smaller dimension
-                    let scaledRadius = radius * min(bounds.width, bounds.height)
-
-                    // When flipping Y, we need to negate the angle's Y component
-                    // This is equivalent to reflecting the angle across the X axis
-                    let flippedStartAngle = -startAngle
-                    let flippedEndAngle = -endAngle
-
-                    if isFirstPoint {
-                        let startPoint = CGPoint(
-                            x: centerPoint.x + cos(flippedStartAngle) * scaledRadius,
-                            y: centerPoint.y + sin(flippedStartAngle) * scaledRadius,
-                        )
-                        bezierPath.move(to: startPoint)
-                        isFirstPoint = false
-                    }
-
-                    // Approximate arc with line segments for simplicity
-                    let steps = 20
-                    for i in 1 ... steps {
-                        let t = Double(i) / Double(steps)
-                        let angle = flippedStartAngle + (flippedEndAngle - flippedStartAngle) * t
-                        let point = CGPoint(
-                            x: centerPoint.x + cos(angle) * scaledRadius,
-                            y: centerPoint.y + sin(angle) * scaledRadius,
-                        )
-                        bezierPath.line(to: point)
-                    }
+                if i == 0 {
+                    bezierPath.move(to: screenPoint)
+                } else {
+                    bezierPath.line(to: screenPoint)
                 }
             }
 
