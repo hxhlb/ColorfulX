@@ -15,14 +15,18 @@ class AuroraGlowView: NSView {
     }
 
     let colorful: AnimatedMulticolorGradientView = {
+        let director = SpeckleAnimationRoundedRectangleDirector(
+            inset: -0.2,
+            cornerRadius: 1,
+            direction: .clockwise,
+            movementRate: 0.1,
+            positionResponseRate: 1,
+        )
+        #if os(macOS) && DEBUG
+            director.debugVisualizationEnabled = true
+        #endif
         let view = AnimatedMulticolorGradientView(
-            animationDirector: SpeckleAnimationRoundedRectangleDirector(
-                inset: -0.2,
-                cornerRadius: 1,
-                direction: .clockwise,
-                movementRate: 0.1,
-                positionResponseRate: 1,
-            ),
+            animationDirector: director,
         )
         view.setColors(.appleIntelligence, animated: false, repeats: true)
         view.speed *= 2

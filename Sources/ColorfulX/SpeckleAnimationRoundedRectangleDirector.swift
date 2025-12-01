@@ -5,10 +5,37 @@
 //  Created by GitHub Copilot on 2025/10/12.
 //
 
+import ColorVector
 import CoreGraphics
 import Foundation
 
+#if os(macOS) && DEBUG
+    import AppKit
+    import QuartzCore
+#endif
+
 open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
+    #if os(macOS) && DEBUG
+        private var debugOverlayLayer: CALayer?
+        private var debugPointLayers: [CAShapeLayer] = []
+        private var debugPathLayer: CAShapeLayer?
+
+        public var debugVisualizationEnabled: Bool = false {
+            didSet {
+                if debugVisualizationEnabled {
+                    setupDebugOverlay()
+                } else {
+                    removeDebugOverlay()
+                }
+            }
+        }
+
+        public var debugPointRadius: CGFloat = 8.0
+        public var debugPointColor: CGColor = NSColor.systemRed.cgColor
+        public var debugPathColor: CGColor = NSColor.systemBlue.withAlphaComponent(0.5).cgColor
+        public var debugPathLineWidth: CGFloat = 2.0
+    #endif
+
     public enum Direction {
         case clockwise
         case counterClockwise
@@ -110,9 +137,17 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
 
     override open func attach(to view: AnimatedMulticolorGradientView) {
         super.attach(to: view)
+        #if os(macOS) && DEBUG
+            if debugVisualizationEnabled {
+                setupDebugOverlay()
+            }
+        #endif
     }
 
     override open func detach() {
+        #if os(macOS) && DEBUG
+            removeDebugOverlay()
+        #endif
         super.detach()
     }
 
@@ -135,6 +170,12 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
         advanceProgress(for: view, deltaTime: deltaTime)
         super.update(deltaTime: deltaTime)
         needsPositionRefresh = false
+
+        #if os(macOS) && DEBUG
+            if debugVisualizationEnabled {
+                updateDebugVisualization()
+            }
+        #endif
     }
 
     override open func initializeSpeckle(
@@ -405,3 +446,229 @@ private extension SpeckleAnimationRoundedRectangleDirector {
         return result
     }
 }
+
+// MARK: - Debug Visualization
+
+#if os(macOS) && DEBUG
+    extension SpeckleAnimationRoundedRectangleDirector {
+        func setupDebugOverlay() {
+            guard let view, debugOverlayLayer == nil else { return }
+
+            let overlay = CALayer()
+            overlay.frame = view.bounds
+            overlay.zPosition = 1000
+            overlay.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
+            view.layer?.addSublayer(overlay)
+            debugOverlayLayer = overlay
+
+            // Create path layer
+            let pathLayer = CAShapeLayer()
+            pathLayer.fillColor = nil
+            pathLayer.strokeColor = debugPathColor
+            pathLayer.lineWidth = debugPathLineWidth
+            pathLayer.lineDashPattern = [4, 4]
+            overlay.addSublayer(pathLayer)
+            debugPathLayer = pathLayer
+
+            // Create point layers for each speckle
+            debugPointLayers.removeAll()
+            for index in 0 ..< Uniforms.COLOR_SLOT {
+                let pointLayer = CAShapeLayer()
+                pointLayer.fillColor = debugPointColor
+                pointLayer.strokeColor = NSColor.white.cgColor
+                pointLayer.lineWidth = 2.0
+                pointLayer.shadowColor = NSColor.black.cgColor
+                pointLayer.shadowOffset = CGSize(width: 0, height: 1)
+                pointLayer.shadowOpacity = 0.5
+                pointLayer.shadowRadius = 2.0
+
+                // Add index label
+                let textLayer = CATextLayer()
+                textLayer.string = "\(index)"
+                textLayer.fontSize = 10
+                textLayer.foregroundColor = NSColor.white.cgColor
+                textLayer.alignmentMode = .center
+                textLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+                textLayer.frame = CGRect(x: -10, y: -10, width: 20, height: 14)
+                pointLayer.addSublayer(textLayer)
+
+                overlay.addSublayer(pointLayer)
+                debugPointLayers.append(pointLayer)
+            }
+
+            updateDebugVisualization()
+        }
+
+        func removeDebugOverlay() {
+            debugOverlayLayer?.removeFromSuperlayer()
+            debugOverlayLayer = nil
+            debugPointLayers.removeAll()
+            debugPathLayer = nil
+        }
+
+        func updateDebugVisualization() {
+            guard let view, let overlay = debugOverlayLayer else { return }
+
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+
+            let bounds = view.bounds
+            overlay.frame = bounds
+
+            // Update path visualization
+            updateDebugPath(in: bounds)
+
+            // Update point positions
+            for (index, pointLayer) in debugPointLayers.enumerated() {
+                guard index < view.speckles.count else {
+                    pointLayer.isHidden = true
+                    continue
+                }
+
+                let speckle = view.speckles[index]
+                pointLayer.isHidden = !speckle.enabled
+
+                if speckle.enabled {
+                    let x = speckle.position.x.context.currentPos * bounds.width
+                    // Flip Y coordinate: macOS uses bottom-left origin, but path uses top-left origin
+                    let y = (1.0 - speckle.position.y.context.currentPos) * bounds.height
+
+                    let circlePath = CGPath(
+                        ellipseIn: CGRect(
+                            x: -debugPointRadius,
+                            y: -debugPointRadius,
+                            width: debugPointRadius * 2,
+                            height: debugPointRadius * 2,
+                        ),
+                        transform: nil,
+                    )
+                    pointLayer.path = circlePath
+                    pointLayer.position = CGPoint(x: x, y: y)
+
+                    // Update text layer position
+                    if let textLayer = pointLayer.sublayers?.first as? CATextLayer {
+                        textLayer.frame = CGRect(
+                            x: -10,
+                            y: debugPointRadius + 2,
+                            width: 20,
+                            height: 14,
+                        )
+                    }
+
+                    // Color the point based on the speckle's color
+                    let labColor = speckle.color
+                    let rgbColor = labColor.color(in: .rgb)
+                    pointLayer.fillColor = CGColor(
+                        red: CGFloat(rgbColor.v.x / 255.0),
+                        green: CGFloat(rgbColor.v.y / 255.0),
+                        blue: CGFloat(rgbColor.v.z / 255.0),
+                        alpha: 1.0,
+                    )
+                }
+            }
+
+            CATransaction.commit()
+        }
+
+        private func updateDebugPath(in bounds: CGRect) {
+            guard let pathLayer = debugPathLayer else { return }
+
+            ensurePath()
+            guard !pathCache.segments.isEmpty else {
+                pathLayer.path = nil
+                return
+            }
+
+            let bezierPath = NSBezierPath()
+            var isFirstPoint = true
+
+            for segment in pathCache.segments {
+                switch segment.kind {
+                case let .line(start, end):
+                    // Flip Y coordinate: macOS uses bottom-left origin
+                    let startPoint = CGPoint(
+                        x: start.x * bounds.width,
+                        y: (1.0 - start.y) * bounds.height,
+                    )
+                    let endPoint = CGPoint(
+                        x: end.x * bounds.width,
+                        y: (1.0 - end.y) * bounds.height,
+                    )
+
+                    if isFirstPoint {
+                        bezierPath.move(to: startPoint)
+                        isFirstPoint = false
+                    }
+                    bezierPath.line(to: endPoint)
+
+                case let .arc(center, radius, startAngle, endAngle):
+                    // Flip Y coordinate: macOS uses bottom-left origin
+                    let centerPoint = CGPoint(
+                        x: center.x * bounds.width,
+                        y: (1.0 - center.y) * bounds.height,
+                    )
+                    // Scale radius uniformly based on the smaller dimension
+                    let scaledRadius = radius * min(bounds.width, bounds.height)
+
+                    // When flipping Y, we need to negate the angle's Y component
+                    // This is equivalent to reflecting the angle across the X axis
+                    let flippedStartAngle = -startAngle
+                    let flippedEndAngle = -endAngle
+
+                    if isFirstPoint {
+                        let startPoint = CGPoint(
+                            x: centerPoint.x + cos(flippedStartAngle) * scaledRadius,
+                            y: centerPoint.y + sin(flippedStartAngle) * scaledRadius,
+                        )
+                        bezierPath.move(to: startPoint)
+                        isFirstPoint = false
+                    }
+
+                    // Approximate arc with line segments for simplicity
+                    let steps = 20
+                    for i in 1 ... steps {
+                        let t = Double(i) / Double(steps)
+                        let angle = flippedStartAngle + (flippedEndAngle - flippedStartAngle) * t
+                        let point = CGPoint(
+                            x: centerPoint.x + cos(angle) * scaledRadius,
+                            y: centerPoint.y + sin(angle) * scaledRadius,
+                        )
+                        bezierPath.line(to: point)
+                    }
+                }
+            }
+
+            bezierPath.close()
+            pathLayer.path = bezierPath.cgPath
+        }
+    }
+
+    private extension NSBezierPath {
+        var cgPath: CGPath {
+            let path = CGMutablePath()
+            var points = [CGPoint](repeating: .zero, count: 3)
+
+            for i in 0 ..< elementCount {
+                let type = element(at: i, associatedPoints: &points)
+                switch type {
+                case .moveTo:
+                    path.move(to: points[0])
+                case .lineTo:
+                    path.addLine(to: points[0])
+                case .curveTo:
+                    path.addCurve(to: points[2], control1: points[0], control2: points[1])
+                case .closePath:
+                    path.closeSubpath()
+                case .cubicCurveTo:
+                    path.addCurve(to: points[2], control1: points[0], control2: points[1])
+                case .quadraticCurveTo:
+                    path.addQuadCurve(to: points[1], control: points[0])
+                @unknown default:
+                    break
+                }
+            }
+
+            return path
+        }
+    }
+#endif
