@@ -49,7 +49,7 @@ private struct ColorPaletteView: View {
                     .frame(width: circleSize, height: circleSize)
                     .overlay(
                         Circle()
-                            .stroke(.white.opacity(0.3), lineWidth: 1)
+                            .stroke(.white.opacity(0.3), lineWidth: 1),
                     )
             }
         }

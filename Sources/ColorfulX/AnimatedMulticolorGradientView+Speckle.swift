@@ -38,7 +38,7 @@ public extension AnimatedMulticolorGradientView {
             targetColor: ColorVector = .init(space: .lab),
             previousColor: ColorVector = .init(space: .lab),
             transitionProgress: Double = 1,
-            position: SpringInterpolation2D = .init()
+            position: SpringInterpolation2D = .init(),
         ) {
             assert(targetColor.space == .lab)
             assert(previousColor.space == .lab)
@@ -51,8 +51,8 @@ public extension AnimatedMulticolorGradientView {
                 context: .init(
                     currentPos: transitionProgress,
                     currentVel: 0,
-                    targetPos: transitionProgress
-                )
+                    targetPos: transitionProgress,
+                ),
             )
             self.position = position
         }
@@ -98,7 +98,7 @@ public extension AnimatedMulticolorGradientView {
         setColors(
             preset.colors.map { ColorVector($0) },
             animated: animated,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 
@@ -106,7 +106,7 @@ public extension AnimatedMulticolorGradientView {
         setColors(
             preset.colors.map { ColorVector($0) },
             animated: animated,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 
@@ -114,7 +114,7 @@ public extension AnimatedMulticolorGradientView {
         setColors(
             colors.map { ColorVector($0) },
             animated: animated,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 }

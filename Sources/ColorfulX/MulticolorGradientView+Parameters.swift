@@ -20,7 +20,7 @@ public extension MulticolorGradientView {
             points: [ColorStop] = [],
             bias: Double = 0.01,
             power: Double = 4,
-            noise: Double = 0
+            noise: Double = 0,
         ) {
             self.points = points
             self.bias = bias

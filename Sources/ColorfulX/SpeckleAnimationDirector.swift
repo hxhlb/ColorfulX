@@ -43,12 +43,12 @@ open class SpeckleAnimationDirector {
     open func updateSpeckle(
         _: inout AnimatedMulticolorGradientView.Speckle,
         index _: Int,
-        deltaTime _: Double
+        deltaTime _: Double,
     ) {}
 
     public func advanceColorTransition(
         for speckle: inout AnimatedMulticolorGradientView.Speckle,
-        deltaTime: Double
+        deltaTime: Double,
     ) {
         guard let view, speckle.transitionProgress.context.currentPos < 1 else { return }
         speckle.transitionProgress.update(withDeltaTime: deltaTime * view.transitionSpeed)
@@ -63,8 +63,8 @@ open class SpeckleAnimationDirector {
                     color: speckle.color,
                     position: .init(
                         x: speckle.position.x.context.currentPos,
-                        y: speckle.position.y.context.currentPos
-                    )
+                        y: speckle.position.y.context.currentPos,
+                    ),
                 )
             }
         }
@@ -72,7 +72,7 @@ open class SpeckleAnimationDirector {
         view.parameters = .init(
             points: points,
             bias: view.bias,
-            noise: view.noise
+            noise: view.noise,
         )
     }
 }

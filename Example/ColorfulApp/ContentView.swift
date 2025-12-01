@@ -34,7 +34,7 @@ struct ContentView: View {
                 transitionSpeed: $duration,
                 frameLimit: $frame,
                 renderScale: $scale,
-                animationDirector: SpeckleAnimationRoundedRectangleDirector()
+                animationDirector: SpeckleAnimationRoundedRectangleDirector(),
             )
             .onTapGesture {
                 shouldHideControls.toggle()
@@ -47,7 +47,7 @@ struct ContentView: View {
                 noise: $noise,
                 duration: $duration,
                 scale: $scale,
-                frame: $frame
+                frame: $frame,
             )
             .opacity(shouldHideControls ? 0 : 1)
             .animation(.interactiveSpring, value: shouldHideControls)

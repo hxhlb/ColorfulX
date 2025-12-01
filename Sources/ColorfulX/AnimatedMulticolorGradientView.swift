@@ -14,7 +14,7 @@ private let SPRING_CONFIG = SpringInterpolation.Configuration(
     angularFrequency: 1.5,
     dampingRatio: 0.2,
     threshold: 0.0001,
-    stopWhenHitTarget: true
+    stopWhenHitTarget: true,
 )
 private let SPRING_ENGINE = SpringInterpolation2D(SPRING_CONFIG)
 private let defaultFrameRate: Int = 60
@@ -62,7 +62,7 @@ open class AnimatedMulticolorGradientView: MulticolorGradientView {
         self.animationDirector = animationDirector
         speckles = .init(
             repeating: .init(position: SPRING_ENGINE),
-            count: Uniforms.COLOR_SLOT
+            count: Uniforms.COLOR_SLOT,
         )
         super.init()
         self.animationDirector.attach(to: self)

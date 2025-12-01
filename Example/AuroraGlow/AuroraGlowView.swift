@@ -21,8 +21,8 @@ class AuroraGlowView: NSView {
                 cornerRadius: 1,
                 direction: .clockwise,
                 movementRate: 0.1,
-                positionResponseRate: 1
-            )
+                positionResponseRate: 1,
+            ),
         )
         view.setColors(.appleIntelligence, animated: false, repeats: true)
         view.speed *= 2

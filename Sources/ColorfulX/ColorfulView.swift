@@ -39,7 +39,7 @@ public struct ColorfulView: View {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1.0),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         _color = color
         _speed = speed
@@ -71,7 +71,7 @@ public struct ColorfulView: View {
             frameLimit: $frameLimit,
             renderScale: $renderScale,
             animationDirector: animationDirector,
-            repeats: repeats
+            repeats: repeats,
         )
         .contentShape(Rectangle())
     }
@@ -93,7 +93,7 @@ private extension Color {
             red: components.r,
             green: components.g,
             blue: components.b,
-            alpha: components.a
+            alpha: components.a,
         )
     }
 
@@ -132,7 +132,7 @@ public extension ColorfulView {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1.0),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         let colorBinding = Binding<[Color]>(get: {
             color
@@ -148,7 +148,7 @@ public extension ColorfulView {
             frameLimit: frameLimit,
             renderScale: renderScale,
             animationDirector: animationDirector,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 
@@ -171,7 +171,7 @@ public extension ColorfulView {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1.0),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         let colorBinding = Binding<[Color]>(get: {
             color.wrappedValue.colors.map { .init($0) }
@@ -187,7 +187,7 @@ public extension ColorfulView {
             frameLimit: frameLimit,
             renderScale: renderScale,
             animationDirector: animationDirector,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 
@@ -210,7 +210,7 @@ public extension ColorfulView {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1.0),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         self.init(
             color: .constant(color),
@@ -221,7 +221,7 @@ public extension ColorfulView {
             frameLimit: frameLimit,
             renderScale: renderScale,
             animationDirector: animationDirector,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 
@@ -244,7 +244,7 @@ public extension ColorfulView {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1.0),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         let colorBinding = Binding<[Color]>(get: {
             color.colors.map { Color($0) }
@@ -260,7 +260,7 @@ public extension ColorfulView {
             frameLimit: frameLimit,
             renderScale: renderScale,
             animationDirector: animationDirector,
-            repeats: repeats
+            repeats: repeats,
         )
     }
 }

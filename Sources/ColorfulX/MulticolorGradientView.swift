@@ -81,9 +81,9 @@ open class MulticolorGradientView: MetalView {
         var shaderPoints: [(simd_float2, simd_float4)] = Array(
             repeating: (
                 simd_float2(0.0, 0.0),
-                simd_float4(0.0, 0.0, 0.0, 0.0)
+                simd_float4(0.0, 0.0, 0.0, 0.0),
             ),
-            count: Uniforms.COLOR_SLOT
+            count: Uniforms.COLOR_SLOT,
         )
 
         let parms = parameters
@@ -93,7 +93,7 @@ open class MulticolorGradientView: MetalView {
             let color = point.color.color(in: .lab)
             shaderPoints[i] = (
                 simd_float2(Float(point.position.x), Float(point.position.y)),
-                simd_float4(color.v)
+                simd_float4(color.v),
             )
         }
 
@@ -119,7 +119,7 @@ open class MulticolorGradientView: MetalView {
             color4: shaderPoints[4].1,
             color5: shaderPoints[5].1,
             color6: shaderPoints[6].1,
-            color7: shaderPoints[7].1
+            color7: shaderPoints[7].1,
         )
 
         commandEncoder.setComputePipelineState(computePipelineState)
@@ -130,7 +130,7 @@ open class MulticolorGradientView: MetalView {
         let threadGroups = MTLSizeMake(
             drawable.texture.width / threadGroupCount.width,
             drawable.texture.height / threadGroupCount.height,
-            1
+            1,
         )
 
         commandEncoder.dispatchThreadgroups(threadGroups, threadsPerThreadgroup: threadGroupCount)

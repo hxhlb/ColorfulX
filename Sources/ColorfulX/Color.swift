@@ -45,14 +45,14 @@ public extension ColorVector {
             red: clamp01(components.red),
             green: clamp01(components.green),
             blue: clamp01(components.blue),
-            alpha: clamp01(components.alpha)
+            alpha: clamp01(components.alpha),
         )
 
         let rgbVector = ColorVector(v: .init(
             clamped.red * 255,
             clamped.green * 255,
             clamped.blue * 255,
-            clamped.alpha
+            clamped.alpha,
         ), space: .rgb)
         if space == .rgb {
             self = rgbVector
@@ -93,7 +93,7 @@ private func extractRGBAComponents(from color: ColorElement) -> RGBAComponents? 
                     red: Double(ciColor.red),
                     green: Double(ciColor.green),
                     blue: Double(ciColor.blue),
-                    alpha: Double(ciColor.alpha)
+                    alpha: Double(ciColor.alpha),
                 )
             }
         #endif
@@ -107,7 +107,7 @@ private func extractRGBAComponents(from cgColor: CGColor) -> RGBAComponents? {
     let normalizedColor = cgColor.converted(
         to: srgbSpace,
         intent: .defaultIntent,
-        options: nil
+        options: nil,
     ) ?? cgColor
 
     guard let rawComponents = normalizedColor.components, !rawComponents.isEmpty else {
@@ -119,7 +119,7 @@ private func extractRGBAComponents(from cgColor: CGColor) -> RGBAComponents? {
             red: Double(rawComponents[0]),
             green: Double(rawComponents[1]),
             blue: Double(rawComponents[2]),
-            alpha: Double(rawComponents[3])
+            alpha: Double(rawComponents[3]),
         )
     }
 
@@ -128,7 +128,7 @@ private func extractRGBAComponents(from cgColor: CGColor) -> RGBAComponents? {
             red: Double(rawComponents[0]),
             green: Double(rawComponents[1]),
             blue: Double(rawComponents[2]),
-            alpha: Double(normalizedColor.alpha)
+            alpha: Double(normalizedColor.alpha),
         )
     }
 
@@ -138,7 +138,7 @@ private func extractRGBAComponents(from cgColor: CGColor) -> RGBAComponents? {
             red: white,
             green: white,
             blue: white,
-            alpha: Double(rawComponents[1])
+            alpha: Double(rawComponents[1]),
         )
     }
 
@@ -148,7 +148,7 @@ private func extractRGBAComponents(from cgColor: CGColor) -> RGBAComponents? {
             red: white,
             green: white,
             blue: white,
-            alpha: Double(normalizedColor.alpha)
+            alpha: Double(normalizedColor.alpha),
         )
     }
 

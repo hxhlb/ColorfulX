@@ -19,7 +19,7 @@ public extension ColorfulColors {
             red: Double(r) / 255,
             green: Double(g) / 255,
             blue: Double(b) / 255,
-            alpha: Double(a) / 255
+            alpha: Double(a) / 255,
         )
     }
 }

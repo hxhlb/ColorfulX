@@ -26,7 +26,7 @@ let package = Package(
                 "ColorVector",
                 "SpringInterpolation",
                 "MSDisplayLink",
-            ]
+            ],
         ),
-    ]
+    ],
 )

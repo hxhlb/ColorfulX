@@ -10,7 +10,7 @@ import Foundation
 open class SpeckleAnimationRandomDirector: SpeckleAnimationDirector {
     override open func initializeSpeckle(
         _ speckle: inout AnimatedMulticolorGradientView.Speckle,
-        index _: Int
+        index _: Int,
     ) {
         let location = randomLocation()
         speckle.position.setCurrent(.init(x: location.x, y: location.y))
@@ -21,7 +21,7 @@ open class SpeckleAnimationRandomDirector: SpeckleAnimationDirector {
     override open func updateSpeckle(
         _ speckle: inout AnimatedMulticolorGradientView.Speckle,
         index: Int,
-        deltaTime: Double
+        deltaTime: Double,
     ) {
         super.updateSpeckle(&speckle, index: index, deltaTime: deltaTime)
         guard let view else { return }
@@ -45,7 +45,7 @@ open class SpeckleAnimationRandomDirector: SpeckleAnimationDirector {
     private func randomLocation() -> (x: Double, y: Double) {
         (
             x: Double.random(in: 0 ... 1),
-            y: Double.random(in: 0 ... 1)
+            y: Double.random(in: 0 ... 1),
         )
     }
 }

@@ -91,7 +91,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
         cornerRadius: Double = 0.18,
         direction: Direction = .clockwise,
         movementRate: Double = 0.25,
-        positionResponseRate: Double = 0.5
+        positionResponseRate: Double = 0.5,
     ) {
         precondition(inset <= 1, "Inset must be less than or equal to 1; use negative values to extend outside the unit square.")
         directionValue = direction
@@ -139,7 +139,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
 
     override open func initializeSpeckle(
         _ speckle: inout AnimatedMulticolorGradientView.Speckle,
-        index: Int
+        index: Int,
     ) {
         super.initializeSpeckle(&speckle, index: index)
         guard index < progressState.count else { return }
@@ -151,7 +151,7 @@ open class SpeckleAnimationRoundedRectangleDirector: SpeckleAnimationDirector {
     override open func updateSpeckle(
         _ speckle: inout AnimatedMulticolorGradientView.Speckle,
         index: Int,
-        deltaTime: Double
+        deltaTime: Double,
     ) {
         super.updateSpeckle(&speckle, index: index, deltaTime: deltaTime)
         guard let view, index < progressState.count else { return }
@@ -217,7 +217,7 @@ private extension SpeckleAnimationRoundedRectangleDirector {
             case let .line(start, end):
                 return (
                     x: start.x + (end.x - start.x) * clamped,
-                    y: start.y + (end.y - start.y) * clamped
+                    y: start.y + (end.y - start.y) * clamped,
                 )
             case let .arc(center, radius, startAngle, endAngle):
                 let angle = startAngle + (endAngle - startAngle) * clamped
@@ -235,7 +235,7 @@ private extension SpeckleAnimationRoundedRectangleDirector {
             center: PathPoint,
             radius: Double,
             startAngle: Double,
-            endAngle: Double
+            endAngle: Double,
         ) -> Segment? {
             let delta = endAngle - startAngle
             guard radius > SpeckleAnimationRoundedRectangleDirector.numericEpsilon,
@@ -247,7 +247,7 @@ private extension SpeckleAnimationRoundedRectangleDirector {
         private static func pointOnArc(center: PathPoint, radius: Double, angle: Double) -> PathPoint {
             (
                 x: center.x + cos(angle) * radius,
-                y: center.y + sin(angle) * radius
+                y: center.y + sin(angle) * radius,
             )
         }
     }
@@ -370,28 +370,28 @@ private extension SpeckleAnimationRoundedRectangleDirector {
                 center: (x: right - radius, y: top + radius),
                 radius: radius,
                 startAngle: 1.5 * .pi,
-                endAngle: 2 * .pi
+                endAngle: 2 * .pi,
             ) { segments.append(arc) }
             if let line = Segment.line(from: rightStart, to: rightEnd) { segments.append(line) }
             if let arc = Segment.arc(
                 center: (x: right - radius, y: bottom - radius),
                 radius: radius,
                 startAngle: 0,
-                endAngle: 0.5 * .pi
+                endAngle: 0.5 * .pi,
             ) { segments.append(arc) }
             if let line = Segment.line(from: bottomStart, to: bottomEnd) { segments.append(line) }
             if let arc = Segment.arc(
                 center: (x: left + radius, y: bottom - radius),
                 radius: radius,
                 startAngle: 0.5 * .pi,
-                endAngle: .pi
+                endAngle: .pi,
             ) { segments.append(arc) }
             if let line = Segment.line(from: leftStart, to: leftEnd) { segments.append(line) }
             if let arc = Segment.arc(
                 center: (x: left + radius, y: top + radius),
                 radius: radius,
                 startAngle: .pi,
-                endAngle: 1.5 * .pi
+                endAngle: 1.5 * .pi,
             ) { segments.append(arc) }
         }
 

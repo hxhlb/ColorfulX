@@ -29,7 +29,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
         frameLimit: Binding<Int> = .constant(0),
         renderScale: Binding<Double> = .constant(1),
         animationDirector: SpeckleAnimationDirector = SpeckleAnimationRandomDirector(),
-        repeats: Bool = true
+        repeats: Bool = true,
     ) {
         _color = color
         _speed = speed
@@ -50,7 +50,7 @@ public struct AnimatedMulticolorGradientViewRepresentable {
         view.setColors(
             color,
             animated: transitionSpeed > 0 && !initialSetup,
-            repeats: repeats
+            repeats: repeats,
         )
         view.speed = speed
         view.bias = bias
